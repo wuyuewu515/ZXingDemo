@@ -1,17 +1,10 @@
 package com.wyw.zxingdemo;
 
-import android.content.ContentResolver;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.hardware.Camera;
-import android.media.ThumbnailUtils;
-import android.net.NetworkInfo;
-import android.net.Uri;
-import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -19,19 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.BinaryBitmap;
-import com.google.zxing.DecodeHintType;
-import com.google.zxing.MultiFormatReader;
-import com.google.zxing.Result;
-import com.google.zxing.common.HybridBinarizer;
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
-import com.uuzuche.lib_zxing.camera.BitmapLuminanceSource;
-import com.uuzuche.lib_zxing.decoding.DecodeFormatManager;
-
-import java.util.Hashtable;
-import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -44,6 +26,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 打开相册扫描照片
      */
     private static final int REQUEST_IMAGE = 1006;
+    /**
+     * 自定义扫描
+     */
+    private static final int REQUEST_DIY = 1007;
 
 
     private ImageView imageView;
@@ -56,8 +42,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Button button = (Button) findViewById(R.id.btn_clickMe);
         Button picBtn = (Button) findViewById(R.id.btn_pic);
+        Button diyBtn = (Button) findViewById(R.id.btn_diy);
         button.setOnClickListener(this);
         picBtn.setOnClickListener(this);
+        diyBtn.setOnClickListener(this);
 
         imageView = (ImageView) findViewById(R.id.iv_pic);
         tvResult = (TextView) findViewById(R.id.tv_result);
@@ -83,6 +71,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.setType("image/*");
                 startActivityForResult(intent, REQUEST_IMAGE);
+            }
+            break;
+
+            case R.id.btn_diy: { //自定义扫描样式
+                Intent intent = new Intent(this, ScanActivity.class);
+                startActivityForResult(intent, REQUEST_DIY);
             }
             break;
         }
@@ -124,6 +118,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Toast.makeText(MainActivity.this, "解析二维码失败", Toast.LENGTH_LONG).show();
                     }
                 });
+            }
+        }
+        if (requestCode == REQUEST_DIY) { //DIY自定义扫描样式
+            if (null != data) {
+                Bundle bundle = data.getExtras();
+                if (bundle == null)
+                    return;
+                if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
+                    String result = bundle.getString(CodeUtils.RESULT_STRING);
+                    tvResult.setText(result);
+                    Toast.makeText(this, "解析结果:" + result, Toast.LENGTH_LONG).show();
+                } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
+                    Toast.makeText(MainActivity.this, "解析二维码失败", Toast.LENGTH_LONG).show();
+                }
             }
         }
     }

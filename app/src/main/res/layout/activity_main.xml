@@ -19,6 +19,13 @@
         android:gravity="center"
         android:text="解析本地图片" />
 
+    <Button
+        android:id="@+id/btn_diy"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="自定义扫码" />
+
 
     <ImageView
         android:id="@+id/iv_pic"
