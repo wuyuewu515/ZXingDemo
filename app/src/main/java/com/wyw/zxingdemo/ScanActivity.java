@@ -28,24 +28,15 @@ public class ScanActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initData() {
-        CodeUtils.AnalyzeCallback callback = new CodeUtils.AnalyzeCallback() {
+
+
+        CodeUtils.AnalyzeCallback callback = new AbsAnalyzeCallback(this) {
             @Override
-            public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
+            protected void AbsAnalyzeSuccess(Bitmap mBitmap, String result) {
                 Intent resultIntent = new Intent();
                 Bundle bundle = new Bundle();
                 bundle.putInt(CodeUtils.RESULT_TYPE, CodeUtils.RESULT_SUCCESS);
                 bundle.putString(CodeUtils.RESULT_STRING, result);
-                resultIntent.putExtras(bundle);
-                ScanActivity.this.setResult(RESULT_OK, resultIntent);
-                ScanActivity.this.finish();
-            }
-
-            @Override
-            public void onAnalyzeFailed() {
-                Intent resultIntent = new Intent();
-                Bundle bundle = new Bundle();
-                bundle.putInt(CodeUtils.RESULT_TYPE, CodeUtils.RESULT_FAILED);
-                bundle.putString(CodeUtils.RESULT_STRING, "");
                 resultIntent.putExtras(bundle);
                 ScanActivity.this.setResult(RESULT_OK, resultIntent);
                 ScanActivity.this.finish();

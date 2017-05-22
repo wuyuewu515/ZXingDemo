@@ -105,17 +105,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String path = BitmapUtil.getImageAbsolutePath(this, data.getData());
 
                 Log.i(TAG, "选中的图片路径是:" + path);
-                CodeUtils.analyzeBitmap(path, new CodeUtils.AnalyzeCallback() {
+
+                CodeUtils.analyzeBitmap(path, new AbsAnalyzeCallback(MainActivity.this) {
                     @Override
-                    public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
+                    protected void AbsAnalyzeSuccess(Bitmap mBitmap, String result) {
                         imageView.setImageBitmap(mBitmap);
                         Toast.makeText(MainActivity.this, "解析结果:" + result, Toast.LENGTH_LONG).show();
                         tvResult.setText(result);
-                    }
-
-                    @Override
-                    public void onAnalyzeFailed() {
-                        Toast.makeText(MainActivity.this, "解析二维码失败", Toast.LENGTH_LONG).show();
                     }
                 });
             }
